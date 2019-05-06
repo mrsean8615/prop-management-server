@@ -29,16 +29,6 @@ module.exports = (app) => {
 
     // Newsletters
 
-    app.post('/newsletters/:id', function(req, res) {
-        console.log(req.body)
-        Newsletter.findOne({ _id: req.body.id }, (err, newsletter) => {
-            if(err) { return next(err); }
-            res.send({
-                newsletter
-            })
-        });
-    })
-
     app.get('/newsletters', function(req, res) {
         Newsletter.find({}, function(err, newsletters) {
             res.send(newsletters);
@@ -60,6 +50,17 @@ module.exports = (app) => {
             // data: fs.readFileSync(target_path, 'base64')
         })
     });
+    app.post('/newsletters/:id', function(req, res) {
+        console.log(req.body)
+        Newsletter.findOne({ _id: req.body.id }, (err, newsletter) => {
+            if(err) { return next(err); }
+            res.send({
+                newsletter
+            })
+        });
+    })
+
+
     
     app.post('/newsletters/edit/:id', function (req, res) {
         const id = req.params.id;
@@ -123,7 +124,7 @@ module.exports = (app) => {
         const title = req.body.title;
         const body = req.body.body;
         const date = new Date(); // creation date
-        const imageUrl = req.file.filename;
+        const imageUrl = !!req.file ? req.file.filename : "";
         const postedBy = req.body.postedBy;
         const status = 'pending'; // pending by default
 
